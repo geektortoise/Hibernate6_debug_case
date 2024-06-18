@@ -1,6 +1,7 @@
 package domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.Where;
 
 import java.util.LinkedHashSet;
@@ -31,7 +32,8 @@ public class Customer {
             //@JoinColumn(name = "COUNTRY_CODE", referencedColumnName = "CUST_COUNTRY_CODE", insertable = false, updatable = false, nullable = false)
     })
     @Where(clause = "ZIP_CODE in (4000,4020,4030)")
-    //@SortNatural
+    @Filter(name = "onlyAvenue")
+    @Filter(name = "onlyBoulevard")
     private Set<Address> addresses = new LinkedHashSet<>();
 
 // Constructors, Getters, Setters, hashCode and so on...

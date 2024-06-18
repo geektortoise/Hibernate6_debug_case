@@ -1,9 +1,12 @@
 package domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.FilterDef;
 
 @Entity
 @Table(name = "address")
+@FilterDef(name = "onlyAvenue", defaultCondition=" STREET_ID = 'avenue'")
+@FilterDef(name = "onlyBoulevard", defaultCondition=" STREET_ID = 'boulevard'")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

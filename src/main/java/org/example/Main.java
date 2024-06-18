@@ -2,6 +2,7 @@ package org.example;
 
 import domain.Customer;
 import jakarta.persistence.*;
+import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
 
 import static org.hibernate.graph.GraphParser.parse;
@@ -25,6 +26,34 @@ public class Main {
         System.out.println("\nDEBUG QUERY");
         query.getResultList();
 
+
+        query = entityManager.createQuery(
+                        "select distinct c from Customer c" +
+                                " left join c.addresses ad "
+                        , Customer.class)
+                .setHint("jakarta.persistence.fetchgraph", parse(Customer.class,
+                        "addresses"
+                        ,
+                        entityManager.unwrap(SessionImplementor.class)))
+        ;
+
+        System.out.println("\nDEBUG QUERY BIS"); // double the left join even without the on !!!
+        query.getResultList();
+
+
+        entityManager
+                .unwrap(Session.class)
+                .enableFilter("onlyAvenue")
+        ;
+
+        query = entityManager.createQuery("select distinct c from Customer c", Customer.class)
+                .setHint("jakarta.persistence.fetchgraph",
+                        parse(Customer.class,"addresses",entityManager.unwrap(SessionImplementor.class))
+                )
+        ;
+
+        System.out.println("\nDEBUG QUERY TER"); // works but filter is on a session level.
+        query.getResultList();
 /*
 
 Hibernate 6.4.4:
